@@ -1,5 +1,5 @@
 {
-  "name": "Owl Notes",
+  "name": "owl-notes",
   "version": "0.0.1",
   "description": "RPG Note App using Electron.",
   "author": "Ryan Wilson",
@@ -34,6 +34,8 @@
     "babel-preset-es2015": "^6.24.1",
     "draft-js": "^0.10.1",
     "font-awesome": "^4.7.0",
+    "nedb": "^1.8.0",
+    "react-router-dom": "^4.2.2",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.72.0"
   }

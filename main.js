@@ -2,6 +2,11 @@
 
 // Import parts of electron to use
 const {app, BrowserWindow} = require('electron');
+
+var ipcMain = require('electron').ipcMain;
+var Datastore = require('nedb');
+var notes = new Datastore({filename: 'notes.db', autoload: true});
+
 const path = require('path')
 const url = require('url')
 
@@ -42,10 +47,10 @@ function createWindow() {
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
-    // Open the DevTools automatically if developing
-    // if ( dev ) {
-    //   mainWindow.webContents.openDevTools();
-    // }
+
+    if ( dev ) {
+      mainWindow.webContents.openDevTools();
+    }
   });
 
   // Emitted when the window is closed.
@@ -77,4 +82,21 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+ipcMain.on('save-note', (event, arg) => {
+  var note = {
+    title: arg.blocks[0].text,
+    message: arg
+  };
+  notes.insert(note, function(err, doc){
+    console.log('Inserted', doc.title, 'with_id', doc._id);
+  })
+});
+
+ipcMain.on('note-list-request', (event, arg) => {
+  console.log("SERVER: List request received");
+  notes.find({}, function (err, docs) {
+    event.sender.send('note-list', docs);
+  });
 });
